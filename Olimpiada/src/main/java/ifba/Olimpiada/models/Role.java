@@ -1,35 +1,38 @@
 package ifba.Olimpiada.models;
 
-import java.util.List;
+import org.springframework.security.core.GrantedAuthority;
 
-import ifba.Olimpiada.dtos.EsporteDto;
+import ifba.Olimpiada.dtos.RoleDto;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity(name = "esportes")
+@Entity(name = "roles")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Esporte {
-	
+public class Role implements GrantedAuthority {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public Long id;
-	public String nome;
-	@OneToMany(mappedBy = "esporte")
-	public List<Medalha> medalhas;
+	private Long id;
+	private String role;
 	
-
-	public Esporte(EsporteDto esporteDto) {
-		this.id = esporteDto.id();
-		this.nome = esporteDto.nome();
+	public Role(RoleDto roleDto) {
+		this.id = roleDto.id();
+		this.role = roleDto.role();
 	}
+	
+	@Override
+	public String getAuthority() {
+		// TODO Auto-generated method stub
+		return role;
+	}
+
 }

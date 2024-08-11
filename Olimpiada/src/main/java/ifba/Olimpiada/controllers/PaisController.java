@@ -1,9 +1,7 @@
 package ifba.Olimpiada.controllers;
 
-import java.awt.print.Pageable;
 import java.util.List;
 
-import org.hibernate.query.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,35 +13,36 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ifba.Olimpiada.dtos.CriarMedalhaDto;
 import ifba.Olimpiada.dtos.MedalhaDto;
+import ifba.Olimpiada.dtos.PaisDto;
 import ifba.Olimpiada.services.MedalhaService;
+import ifba.Olimpiada.services.PaisService;
 import jakarta.transaction.Transactional;
 
 @RestController
-@RequestMapping("/medalha")
-public class MedalhaController {
+@RequestMapping("/pais")
+public class PaisController {
 
 	@Autowired
-	MedalhaService medalhaService;
+	PaisService paisService;
 	
 	@GetMapping
-	public List<MedalhaDto> listar() {
+	public List<PaisDto> listar() {
 			
-		return medalhaService.listarTodos();
+		return paisService.listarTodos();
 	}
 	
 	@PostMapping
-	public ResponseEntity<MedalhaDto> salvar(@RequestBody CriarMedalhaDto medalhaDto) {
+	public ResponseEntity<PaisDto> salvar(@RequestBody PaisDto paisDto) {
 
-		return medalhaService.cadastrar(medalhaDto);
+		return paisService.cadastrar(paisDto);
 	}
 	
 	@PutMapping("/{id}")
 	@Transactional
-	public ResponseEntity<MedalhaDto> atualizar(@RequestBody  MedalhaDto medalhaDto, @PathVariable Long id) {
+	public ResponseEntity<PaisDto> atualizar(@RequestBody  PaisDto paisDto, @PathVariable Long id) {
 
-		return medalhaService.atualizar(medalhaDto, id);
+		return paisService.atualizar(paisDto, id);
 	}
 	
 	@DeleteMapping("/{id}")
@@ -51,6 +50,6 @@ public class MedalhaController {
 	//@Secured("ROLE_ADMINPONTO")
 	public ResponseEntity<?> deletar(@PathVariable Long id) {
 
-		return medalhaService.DeletarPorId(id);
+		return paisService.DeletarPorId(id);
 	}
 }

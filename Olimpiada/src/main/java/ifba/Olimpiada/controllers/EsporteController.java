@@ -1,9 +1,7 @@
 package ifba.Olimpiada.controllers;
 
-import java.awt.print.Pageable;
 import java.util.List;
 
-import org.hibernate.query.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,35 +13,36 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ifba.Olimpiada.dtos.CriarMedalhaDto;
+import ifba.Olimpiada.dtos.EsporteDto;
 import ifba.Olimpiada.dtos.MedalhaDto;
+import ifba.Olimpiada.services.EsporteService;
 import ifba.Olimpiada.services.MedalhaService;
 import jakarta.transaction.Transactional;
 
 @RestController
-@RequestMapping("/medalha")
-public class MedalhaController {
+@RequestMapping("/esporte")
+public class EsporteController {
 
 	@Autowired
-	MedalhaService medalhaService;
+	EsporteService esporteService;
 	
 	@GetMapping
-	public List<MedalhaDto> listar() {
+	public List<EsporteDto> listar() {
 			
-		return medalhaService.listarTodos();
+		return esporteService.listarTodos();
 	}
 	
 	@PostMapping
-	public ResponseEntity<MedalhaDto> salvar(@RequestBody CriarMedalhaDto medalhaDto) {
+	public ResponseEntity<EsporteDto> salvar(@RequestBody EsporteDto esporteDto) {
 
-		return medalhaService.cadastrar(medalhaDto);
+		return esporteService.cadastrar(esporteDto);
 	}
 	
 	@PutMapping("/{id}")
 	@Transactional
-	public ResponseEntity<MedalhaDto> atualizar(@RequestBody  MedalhaDto medalhaDto, @PathVariable Long id) {
+	public ResponseEntity<EsporteDto> atualizar(@RequestBody  EsporteDto esporteDto, @PathVariable Long id) {
 
-		return medalhaService.atualizar(medalhaDto, id);
+		return esporteService.atualizar(esporteDto, id);
 	}
 	
 	@DeleteMapping("/{id}")
@@ -51,6 +50,6 @@ public class MedalhaController {
 	//@Secured("ROLE_ADMINPONTO")
 	public ResponseEntity<?> deletar(@PathVariable Long id) {
 
-		return medalhaService.DeletarPorId(id);
+		return esporteService.DeletarPorId(id);
 	}
 }
