@@ -9,10 +9,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import ifba.Olimpiada.dtos.AssociacaoUsuarioPaisDto;
 import ifba.Olimpiada.dtos.DadosAutenticacao;
 import ifba.Olimpiada.dtos.DadosTokenJWT;
 import ifba.Olimpiada.models.Usuario;
+import ifba.Olimpiada.services.AssociacaoService;
 import ifba.Olimpiada.services.JWTokenService;
+import ifba.Olimpiada.services.UsuarioService;
 
 @RestController
 @RequestMapping("/login")
@@ -24,6 +27,12 @@ public class UsuarioController {
 	@Autowired
 	private JWTokenService tokenService;
 	
+	@Autowired
+    private UsuarioService usuarioService;
+	
+	@Autowired
+	private AssociacaoService associacaoService;
+	
 	@PostMapping
 	public ResponseEntity efetuarLogin(@RequestBody DadosAutenticacao dados) {
         var authenticationToken = new UsernamePasswordAuthenticationToken(dados.login(), dados.senha());
@@ -31,5 +40,17 @@ public class UsuarioController {
         var tokenJWT = tokenService.gerarToken((Usuario) authentication.getPrincipal());
 
         return ResponseEntity.ok(new DadosTokenJWT(tokenJWT));
+    }
+	
+	@PostMapping("/register")
+    public ResponseEntity cadastrarUsuario(@RequestBody DadosAutenticacao dados) {
+        Usuario usuario = usuarioService.cadastrarUsuario(dados);
+        return ResponseEntity.ok(usuario);
+    }
+	
+	@PostMapping("/associar-pais")
+    public ResponseEntity<?> associarUsuarioComPais(@RequestBody AssociacaoUsuarioPaisDto associacaoDto) {
+        associacaoService.associarUsuarioComPais(associacaoDto.usuarioId(), associacaoDto.paisId());
+        return ResponseEntity.ok("Usuário associado ao país com sucesso!");
     }
 }

@@ -28,6 +28,7 @@ public class Pais {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Long id;
 	public String nome;
+	public String Codigo;
 	
 	@ManyToMany
 	@JoinTable(

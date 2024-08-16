@@ -2,8 +2,10 @@ package ifba.Olimpiada.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import ifba.Olimpiada.dtos.DadosAutenticacao;
 import ifba.Olimpiada.dtos.UsuarioDto;
 import ifba.Olimpiada.models.Usuario;
 import ifba.Olimpiada.repositories.UsuarioRepository;
@@ -18,6 +20,9 @@ public class UsuarioService {
 	@Autowired
 	UsuarioRepository usuarioRepository;
 	
+	@Autowired
+    private PasswordEncoder passwordEncoder;
+	
 	//@Autowired
 	//RoleRepository roleRepository;
 	
@@ -26,6 +31,14 @@ public class UsuarioService {
 		Page<Usuario> usuarios = usuarioRepository.findAll(pageble);
 		return usuarios.map(UsuarioDto::new);
 	}
+	
+	public Usuario cadastrarUsuario(DadosAutenticacao dados) {
+        Usuario usuario = new Usuario();
+        usuario.setLogin(dados.login());
+        usuario.setSenha(passwordEncoder.encode(dados.senha()));
+        
+        return usuarioRepository.save(usuario);
+    }
 	
 	public ResponseEntity<UsuarioDto> salvar(UsuarioDto usuarioDto) {
 
