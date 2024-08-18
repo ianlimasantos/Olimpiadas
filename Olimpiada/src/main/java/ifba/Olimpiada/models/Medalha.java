@@ -28,6 +28,7 @@ public class Medalha {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Long Id;
+	public String Descricao;
 	@Enumerated(EnumType.STRING)
 	public TipoMedalha tipoMedalha;
 	

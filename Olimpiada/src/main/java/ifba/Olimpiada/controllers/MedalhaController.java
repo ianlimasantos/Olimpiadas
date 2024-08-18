@@ -4,6 +4,8 @@ import java.awt.print.Pageable;
 import java.util.List;
 
 import org.hibernate.query.Page;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ifba.Olimpiada.dtos.CriarMedalhaDto;
 import ifba.Olimpiada.dtos.MedalhaDto;
+import ifba.Olimpiada.dtos.PaisEmailDto;
+import ifba.Olimpiada.services.AssociacaoService;
 import ifba.Olimpiada.services.MedalhaService;
 import jakarta.transaction.Transactional;
 
@@ -25,7 +29,13 @@ import jakarta.transaction.Transactional;
 public class MedalhaController {
 
 	@Autowired
+	private RabbitTemplate rabbitTemplate;
+	
+	@Autowired
 	MedalhaService medalhaService;
+	
+	@Autowired
+	AssociacaoService associacaoService;
 	
 	@GetMapping
 	public List<MedalhaDto> listar() {
@@ -35,8 +45,14 @@ public class MedalhaController {
 	
 	@PostMapping
 	public ResponseEntity<MedalhaDto> salvar(@RequestBody CriarMedalhaDto medalhaDto) {
-
-		return medalhaService.cadastrar(medalhaDto);
+        var result = medalhaService.cadastrar(medalhaDto);
+        if(result.getStatusCode().is2xxSuccessful()) {
+        	PaisEmailDto paisEmailDto = associacaoService.obterPaisComEmails(medalhaDto.paisId());
+        	var usuarios = associacaoService.obterUsuariosPorPais(medalhaDto.paisId());
+        	this.rabbitTemplate.convertAndSend("email.notificacao", paisEmailDto);
+        	
+        }
+        return result;
 	}
 	
 	@PutMapping("/{id}")
